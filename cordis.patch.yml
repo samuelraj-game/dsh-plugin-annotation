@@ -1,0 +1,5 @@
+# Loader rows contributed by this bundle. The row names this package, so the
+# bundle and the plugin ship as one installable unit.
+- insert:
+    - id: ui-annotation
+      name: dsh-plugin-annotation
