@@ -1,26 +1,41 @@
 # dsh-plugin-annotation
 
-Select a passage in a [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) response, write a comment about it, and stage it in a tray above the composer — then send every annotation together with whatever you write next.
+Select a passage in a [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) response, write a comment about it, and stage it in a stack above the composer — then send every annotation together with whatever you write next.
 
 ## What it does
 
 1. Select text anywhere in the conversation.
 2. A **Comment** pill appears beside the selection; click it.
-3. Type an optional comment and press **Enter** to stage it, or **Ctrl+Enter** to send immediately.
+3. Type an optional comment and press **Enter** to stage it, or **Ctrl+Enter** to send only that annotation immediately.
 
-Staged annotations collect in a **tray above the composer**:
+Staged annotations stay **out of the composer draft**. They collect in a small
+count pill above the composer:
 
 ```
-(2) annotations                                        [Send]
- 1  "remove"                                     ✎  🗑
+[ 💬 2 annotations  (×) ]
+```
+
+Hover the pill to open the stack. The panel lists each annotation with its
+quoted passage, your comment, and edit/remove actions:
+
+```
+2 annotations                                            [Send all]
+ 1  SELECTED TEXT
+    "remove"
+    USER COMMENT
     are you sure?
- 2  "the official 0.4.10 installer"              ✎  🗑
-    no comment — sent as context
+ 2  SELECTED TEXT
+    "the official 0.4.10 installer"
+    USER COMMENT
+    no comment
 ```
 
-- Each annotation carries a **numbered pin** over the passage it came from, and the passage stays highlighted.
-- Rows can be **edited** or **removed** before sending.
+- Each annotation carries a **numbered pin** over the passage it came from; the passage stays highlighted.
+- Hovering a row or its pin paints that passage with a stronger highlight.
+- The panel is resizable vertically and matches the composer width.
+- The **×** button appears when you hover the count pill and clears the whole stack.
 - A blank comment is allowed: the selection alone is staged, so it can stand as context or agreement for the prompt you are about to write.
+- **Ctrl+Enter** sends only the annotation you are drafting, even when other annotations are already staged.
 
 Sending produces one message combining every annotation with your composer text:
 
@@ -36,17 +51,22 @@ Annotation 2:
 please also check the checksum
 ```
 
-Because the staged blocks are mirrored into the composer draft, a normal **Enter in the composer** sends them too — they are part of the message, not a separate side channel.
+An ordinary **Enter** in the composer (or the composer's send button) sends the
+staged stack with the draft, so annotations are part of the next message rather
+than a separate side channel. They are not written into the text field while you
+are composing.
 
 ## Keyboard
 
 | Where | Key | Effect |
 |---|---|---|
-| Comment card | `Enter` | Stage in the tray |
-| Comment card | `Ctrl`/`Cmd`+`Enter` | Stage and send now |
+| Comment card | `Enter` | Stage in the stack |
+| Comment card | `Ctrl`/`Cmd`+`Enter` | Send only this annotation now |
 | Comment card | `Shift`+`Enter` | New line |
 | Comment card | `Esc` | Cancel |
-| Tray | `Send` | Send the tray plus the draft |
+| Count pill | Hover | Open the stack |
+| Count pill | `×` (on hover) | Clear the stack |
+| Stack panel | `Send all` | Send the stack plus the draft |
 
 ## Install
 
@@ -84,16 +104,17 @@ Adding `dsh-plugin-annotation` to the profile's `dsh.profile.bundles` (and insta
 
 - The browser half registers one entry in the `conversation.input.overlay` slot, which the shell mounts once per Session, so it is available in every conversation.
 - Selections are tracked with `mouseup` / `keyup` / `selectionchange`; selections inside editable surfaces (the composer, inputs) are ignored.
-- Staged annotations are serialized into numbered blocks and written into the composer through the stable `inputActions.setDraft` face; the user's own text is preserved by removing the previous blocks first. Sending uses the normal composer submit, so queue/steer policy, drafts, and undo all behave as usual.
-- Annotated ranges are painted with the CSS Custom Highlight API (`::highlight(dsh-annotation)`) and numbered with a positioned overlay that re-measures on scroll, resize, and a light interval.
+- Staged annotations are kept in plugin state, not in the draft. When a message is sent, the stack is serialized into numbered blocks and sent with the draft through the normal composer submit (or through the Session conversation transport for a single annotation).
+- An ordinary Enter or a click on the composer's primary send button is intercepted only when the stack is non-empty and the composer is in its plain phase, so command menus and other modes still behave normally.
+- Annotated ranges are painted with the CSS Custom Highlight API (`::highlight(dsh-annotation)`), and the hovered annotation gets a second, stronger highlight; numbered pins re-measure on scroll, resize, and a light interval.
 - Styles use the shell's design tokens (`--dsw-alias-*`), so light and dark themes both look native.
 - No host-side behaviour: the node half is an empty `apply()`.
 
 ## Known limits
 
-- Pins follow the live DOM range. If the transcript re-renders and detaches the range (for example a streaming message that replaces its nodes), the pin disappears while the annotation itself stays in the tray.
-- If you delete a staged block by hand inside the composer, the tray row remains until the draft is sent or emptied.
-- Annotations are not persisted across a page reload, because the draft is.
+- Pins follow the live DOM range. If the transcript re-renders and detaches the range (for example a streaming message that replaces its nodes), the pin disappears while the annotation itself stays in the stack.
+- Annotations are not persisted across a page reload, because they live in client state.
+- Sending the stack while a draft has file attachments uses the composer submit path, so the composed annotation text is briefly written into the draft immediately before it is sent.
 
 ## Compatibility
 
