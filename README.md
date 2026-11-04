@@ -74,7 +74,7 @@ window.__ModuleLoader__.load({ id: "dsh-plugin-annotation", factory: (require) =
 
 After changing it, copy `lib/client.js` into `<profile>/node_modules/dsh-plugin-annotation/lib/` and reload the app.
 
-`site/` holds the plugin-market index (`index.json` + `icons/`) published with GitHub Pages.
+`docs/` holds the plugin-market index (`index.json` + `icons/`) published with GitHub Pages (Settings -> Pages -> Deploy from a branch -> `main` / `/docs`).
 
 ## License
 
