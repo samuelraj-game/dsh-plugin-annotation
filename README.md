@@ -110,15 +110,33 @@ Adding `dsh-plugin-annotation` to the profile's `dsh.profile.bundles` (and insta
 - Styles use the shell's design tokens (`--dsw-alias-*`), so light and dark themes both look native.
 - No host-side behaviour: the node half is an empty `apply()`.
 
+## Compatibility and permissions
+
+| | |
+|---|---|
+| DSH | `>= 0.2.1-rc.5` (declared in `engines.dsh`) |
+| Profile | a base-backed `web` or Desktop profile that mounts `@deepseek-ai/dsh-client-ui-conversation`; the package contributes to its `conversation.input.overlay` slot |
+| Node.js | none beyond DSH's own — the package has no host-side behaviour |
+| OS | any platform the DSH client runs on (Windows, macOS, Linux) |
+
+**Permissions: none of the DSH permission categories are used.** No filesystem access, no network requests, no command execution, no credential access, no MCP or host APIs.
+
+- **Reads:** the browser's text selection and the composer draft state already supplied to UI plugins.
+- **Writes:** the composer draft through the public `inputActions` face, one `<style>` element, and its own fixed-position overlay elements.
+- **Dependencies:** none. No `dependencies`, no runtime `devDependencies`, no `preinstall` / `install` / `postinstall` / `prepare` scripts, no native binaries, no dynamic code loading.
+- **Build:** the shipped `lib/client.js` is the artifact; consuming the package needs no build step.
+
+### Main risks
+
+- When the stack is non-empty, sending writes the composed annotation text into the composer draft immediately before submitting it, so a failed send can leave that text in the draft.
+- Annotations live in client state: a page reload discards them (the draft is unaffected).
+- The plugin observes text selection document-wide; selections inside editable surfaces and its own UI are ignored.
+
 ## Known limits
 
 - Pins follow the live DOM range. If the transcript re-renders and detaches the range (for example a streaming message that replaces its nodes), the pin disappears while the annotation itself stays in the stack.
 - Annotations are not persisted across a page reload, because they live in client state.
 - Sending the stack while a draft has file attachments uses the composer submit path, so the composed annotation text is briefly written into the draft immediately before it is sent.
-
-## Compatibility
-
-Requires DSH `>= 0.2.1-rc.5`. The plugin uses only the shared platform modules (`react`, `react-dom`), so it needs no build step beyond the shipped bundle.
 
 ## Development
 
