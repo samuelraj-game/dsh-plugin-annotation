@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Stage comments on selected passages in a DSH conversation and send them with your next message.",
   "license": "MIT",
-  "author": "DeveloperYaariGames <developer@yaarigames.com>",
+  "author": "samuelraj-game <237381909+samuelraj-game@users.noreply.github.com>",
   "icon": "./icon.svg",
   "type": "module",
   "main": "lib/index.js",
