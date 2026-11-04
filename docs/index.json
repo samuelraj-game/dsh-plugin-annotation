@@ -6,12 +6,22 @@
     {
       "name": "dsh-plugin-annotation",
       "title": { "en": "Annotations" },
-      "description": { "en": "Select a passage in a response, write a comment, and send it into the conversation as an annotation." },
+      "description": { "en": "Stage comments on selected passages in a tray above the composer, then send them with your next message." },
       "icon": "icons/annotation.svg",
       "author": "samuelraj-game",
       "homepage": "https://github.com/samuelraj-game/dsh-plugin-annotation#readme",
       "repository": { "url": "https://github.com/samuelraj-game/dsh-plugin-annotation" },
       "versions": [
+        {
+          "version": "0.2.0",
+          "publishTimestamp": 1793862000,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/samuelraj-game/dsh-plugin-annotation",
+            "commit": "e283e1213e7697417ba3adb789ebca88127ece8e"
+          },
+          "engines": { "dsh": ">=0.2.1-rc.5" }
+        },
         {
           "version": "0.1.0",
           "publishTimestamp": 1793835975,
