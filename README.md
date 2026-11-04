@@ -138,6 +138,16 @@ Adding `dsh-plugin-annotation` to the profile's `dsh.profile.bundles` (and insta
 - Annotations are not persisted across a page reload, because they live in client state.
 - Sending the stack while a draft has file attachments uses the composer submit path, so the composed annotation text is briefly written into the draft immediately before it is sent.
 
+## Releasing
+
+```sh
+node scripts/release.mjs patch     # 0.3.1 -> 0.3.2
+node scripts/release.mjs minor     # 0.3.1 -> 0.4.0
+node scripts/release.mjs 0.4.2     # explicit version
+```
+
+One command bumps `package.json`, commits the release, pins that commit in `docs/index.json`, commits the index, and pushes. Add `--dry-run` to see the plan without touching anything. It requires a clean working tree on `main`, and it does not publish to npm — the market installs straight from the pinned commit.
+
 ## Development
 
 The repository is the published package; `lib/client.js` is hand-authored in the bundle format the client module system expects:
