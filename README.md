@@ -1,24 +1,52 @@
 # dsh-plugin-annotation
 
-Select a passage in a [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) response, write a comment about it, and send it into the conversation as an annotation — so you and the agent can keep talking about exactly that text.
+Select a passage in a [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) response, write a comment about it, and stage it in a tray above the composer — then send every annotation together with whatever you write next.
 
 ## What it does
 
 1. Select text anywhere in the conversation.
-2. An **Annotate** pill appears next to the selection.
-3. Click it, type your comment, press **Enter**.
+2. A **Comment** pill appears beside the selection; click it.
+3. Type an optional comment and press **Enter** to stage it, or **Ctrl+Enter** to send immediately.
 
-The message that lands in the chat is:
+Staged annotations collect in a **tray above the composer**:
 
 ```
-Annotation on this passage:
-
-> the text you selected
-
-your comment
+(2) annotations                                        [Send]
+ 1  "remove"                                     ✎  🗑
+    are you sure?
+ 2  "the official 0.4.10 installer"              ✎  🗑
+    no comment — sent as context
 ```
 
-Because it is an ordinary user turn, the agent sees the quoted passage and your comment together, and the conversation continues normally.
+- Each annotation carries a **numbered pin** over the passage it came from, and the passage stays highlighted.
+- Rows can be **edited** or **removed** before sending.
+- A blank comment is allowed: the selection alone is staged, so it can stand as context or agreement for the prompt you are about to write.
+
+Sending produces one message combining every annotation with your composer text:
+
+```
+Annotation 1:
+> remove
+
+are you sure?
+
+Annotation 2:
+> the official 0.4.10 installer
+
+please also check the checksum
+```
+
+Because the staged blocks are mirrored into the composer draft, a normal **Enter in the composer** sends them too — they are part of the message, not a separate side channel.
+
+## Keyboard
+
+| Where | Key | Effect |
+|---|---|---|
+| Comment card | `Enter` | Stage in the tray |
+| Comment card | `Ctrl`/`Cmd`+`Enter` | Stage and send now |
+| Comment card | `Shift`+`Enter` | New line |
+| Comment card | `Esc` | Cancel |
+| Tray | `Send` | Send the tray plus the draft |
 
 ## Install
 
@@ -55,10 +83,17 @@ Adding `dsh-plugin-annotation` to the profile's `dsh.profile.bundles` (and insta
 ## How it works
 
 - The browser half registers one entry in the `conversation.input.overlay` slot, which the shell mounts once per Session, so it is available in every conversation.
-- Selecting text is tracked with `mouseup` / `keyup` / `selectionchange`; selections inside editable surfaces (the composer, inputs) are ignored.
-- Sending uses the direct Session prompt — `ctx.sessions.scope(sessionId).conversation.send(text)` — so the composer draft is never touched and no send/queue arbitration is disturbed. If that path is unavailable it falls back to filling the composer through its stable `inputActions` face, appending to an existing draft rather than overwriting it.
-- Styles are injected as one `<style data-plugin="dsh-plugin-annotation">` tag and use the shell's design tokens (`--dsw-alias-*`), so light and dark themes both look native.
+- Selections are tracked with `mouseup` / `keyup` / `selectionchange`; selections inside editable surfaces (the composer, inputs) are ignored.
+- Staged annotations are serialized into numbered blocks and written into the composer through the stable `inputActions.setDraft` face; the user's own text is preserved by removing the previous blocks first. Sending uses the normal composer submit, so queue/steer policy, drafts, and undo all behave as usual.
+- Annotated ranges are painted with the CSS Custom Highlight API (`::highlight(dsh-annotation)`) and numbered with a positioned overlay that re-measures on scroll, resize, and a light interval.
+- Styles use the shell's design tokens (`--dsw-alias-*`), so light and dark themes both look native.
 - No host-side behaviour: the node half is an empty `apply()`.
+
+## Known limits
+
+- Pins follow the live DOM range. If the transcript re-renders and detaches the range (for example a streaming message that replaces its nodes), the pin disappears while the annotation itself stays in the tray.
+- If you delete a staged block by hand inside the composer, the tray row remains until the draft is sent or emptied.
+- Annotations are not persisted across a page reload, because the draft is.
 
 ## Compatibility
 
@@ -74,7 +109,7 @@ window.__ModuleLoader__.load({ id: "dsh-plugin-annotation", factory: (require) =
 
 After changing it, copy `lib/client.js` into `<profile>/node_modules/dsh-plugin-annotation/lib/` and reload the app.
 
-`docs/` holds the plugin-market index (`index.json` + `icons/`) published with GitHub Pages (Settings -> Pages -> Deploy from a branch -> `main` / `/docs`).
+`docs/` holds the plugin-market index (`index.json` + `icons/`), published with GitHub Pages (Settings → Pages → Deploy from a branch → `main` / `/docs`).
 
 ## License
 

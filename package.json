@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-annotation",
-  "version": "0.1.0",
-  "description": "Select a passage in a DSH response, write a comment, and send it into the conversation as an annotation.",
+  "version": "0.2.0",
+  "description": "Stage comments on selected passages in a DSH conversation and send them with your next message.",
   "license": "MIT",
   "author": "DeveloperYaariGames <developer@yaarigames.com>",
   "icon": "./icon.svg",
