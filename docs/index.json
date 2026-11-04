@@ -1,16 +1,26 @@
 {
   "format": 1,
-  "title": { "en": "Sam's DSH plugins" },
-  "description": { "en": "Small, focused plugins for DeepSeek Harness." },
+  "title": {
+    "en": "Sam's DSH plugins"
+  },
+  "description": {
+    "en": "Small, focused plugins for DeepSeek Harness."
+  },
   "plugins": [
     {
       "name": "dsh-plugin-annotation",
-      "title": { "en": "Annotations" },
-      "description": { "en": "Stage comments on selected passages in a stack above the composer, then send them with your next message." },
+      "title": {
+        "en": "Annotations"
+      },
+      "description": {
+        "en": "Stage comments on selected passages in a stack above the composer, then send them with your next message."
+      },
       "icon": "icons/annotation.svg",
       "author": "samuelraj-game",
       "homepage": "https://github.com/samuelraj-game/dsh-plugin-annotation#readme",
-      "repository": { "url": "https://github.com/samuelraj-game/dsh-plugin-annotation" },
+      "repository": {
+        "url": "https://github.com/samuelraj-game/dsh-plugin-annotation"
+      },
       "versions": [
         {
           "version": "0.3.1",
@@ -18,9 +28,11 @@
           "source": {
             "type": "git",
             "url": "https://github.com/samuelraj-game/dsh-plugin-annotation",
-            "commit": "a160764bcdd070d39f8a7cb49517d8a198a3066d"
+            "commit": "35702372613fb06d419b7059d59d06d19a71e3c4"
           },
-          "engines": { "dsh": ">=0.2.1-rc.5" }
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
         },
         {
           "version": "0.2.0",
@@ -30,7 +42,9 @@
             "url": "https://github.com/samuelraj-game/dsh-plugin-annotation",
             "commit": "c1e61df49f0e2a861135dd47439266562bf69876"
           },
-          "engines": { "dsh": ">=0.2.1-rc.5" }
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
         },
         {
           "version": "0.1.0",
@@ -40,7 +54,9 @@
             "url": "https://github.com/samuelraj-game/dsh-plugin-annotation",
             "commit": "37077acec34368e885dd8c2e96c4e98d38bd304c"
           },
-          "engines": { "dsh": ">=0.2.1-rc.5" }
+          "engines": {
+            "dsh": ">=0.2.1-rc.5"
+          }
         }
       ]
     }
